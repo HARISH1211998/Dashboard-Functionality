@@ -13,21 +13,24 @@
         <button class="btn btn-primary mt-3 mb-3" onclick="refreshTable()">Refresh</button>
         
         <table class="table">
+            <h4 class="mt-4">Website UI Health Checker</h4>
             <thead>
                 <tr>
                     <th>Project Name</th>
                     <th>URL</th>
                     <th>Status</th>
                     <th>Last Checked</th>
+                    <th>Message</th>
                 </tr>
             </thead>
             <tbody>
                 {% for project in projects %}
                     <tr>
                         <td>{{ project['project_name'] }}</td>
-                        <td>{{ project['url'] }}</td>
+                        <td>{{ project['url'] | url_without_query }}</td>
                         <td>{{ project['status'] }}</td>
                         <td>{{ project['last_checked'] }}</td>
+                        <td>{{ project['status_message'] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
