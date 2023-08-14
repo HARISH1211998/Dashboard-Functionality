@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 PROJECTS = []  # Store project data
 
+PROJECTSAPI=[] 
 
 def check_authenticated_url(url, api_key):
     headers = {
@@ -18,12 +19,11 @@ def check_authenticated_url(url, api_key):
     try:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
-            return True, response.json(), response.status_code  # Also return the status code
+            return True, response.json(), response.status_code
         else:
-            return False, response.json(), response.status_code  # Also return the status code
+            return False, response.json(), response.status_code
     except requests.RequestException:
         return False, {'message': 'Fail'}, None
-
 
 def check_url_status():
     for project in PROJECTS:
@@ -36,7 +36,6 @@ def check_url_status():
             project['status'] = 'Error'
             project['status_message'] = 'Fail'
         project['last_checked'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
 
 @app.route('/')
 def index():
@@ -58,36 +57,37 @@ def index():
 
     check_url_status()
 
-    # Get the API result
-    url = "https://api.expand.network/chain/getbalance/?address=0x731FDBd6871aD5cD905eE560A84615229eD8197a"
-    api_key = "4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0"
-    is_successful, response_data, status_code = check_authenticated_url(url, api_key)
+    # Iterate through each row in the API CSV and check the authenticated API
+    PROJECTSAPI.clear()
+    with open('expandapi.csv', 'r') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            url = row['URL']
+            api_key = row['api_key']
+            is_successful, response_data, status_code = check_authenticated_url(url, api_key)
 
-    # Determine the status based on the HTTP status code from the response
-    if is_successful:
-        status = status_code
-    else:
-        # Get the actual HTTP status code from the response object
-        status = status_code if status_code is not None else 'Failed'
+            if is_successful:
+                status = status_code
+            else:
+                status = status_code if status_code is not None else 'Failed'
 
-    api_result = {
-        'project_name': 'Expand Network',
-        'url': url,
-        'status': status,
-        'last_checked': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'status_message': response_data.get('message', 'success')
-    }
+            api_result = {
+                'project_name': 'Expand Network',
+                'url': url,
+                'status': status,
+                'last_checked': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'status_message': response_data.get('message', 'success'),
+                'apikey': api_key,
+            }
+            PROJECTSAPI.append(api_result)
 
-    PROJECTS.append(api_result)
-    return render_template('index.html', projects=PROJECTS)
-
+    return render_template('index.html', projects=PROJECTS, projectApi=PROJECTSAPI)
 
 @app.template_filter('url_without_query')
 def url_without_query(url):
     parsed_url = urlparse(url)
     clean_url = urlunparse(parsed_url._replace(query=''))
     return clean_url
-
 
 if __name__ == '__main__':
     app.run(debug=True)

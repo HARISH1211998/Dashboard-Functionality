@@ -12,9 +12,25 @@
         <!-- Add Refresh Button -->
         <button class="btn btn-primary mt-3 mb-3" onclick="refreshTable()">Refresh</button>
         
-        <table class="table">
-            <h4 class="mt-4">Website UI Health Checker</h4>
-            <thead>
+        <style>
+            .table-dark-yellow {
+                background-color: #ffc107;
+                color: #212529;
+            }
+            .table-danger {
+                background-color: #f8d7da;
+            }
+            .table-success {
+                background-color: #d4edda;
+            }
+            .table-bordered {
+                border: 2px solid #dee2e6;
+            }
+        </style>
+        
+        <table class="table table-bordered">
+            <h4 class="mt-4 table-dark-yellow">Website UI Health Checker</h4>
+            <thead class="table-dark">
                 <tr>
                     <th>Project Name</th>
                     <th>URL</th>
@@ -28,9 +44,33 @@
                     <tr>
                         <td>{{ project['project_name'] }}</td>
                         <td>{{ project['url'] | url_without_query }}</td>
-                        <td>{{ project['status'] }}</td>
+                        <td>{% if project.status == 200 %}<span style="color: green;">{{ project['status'] }}</span>{% else %}<span style="color: red;">{{ project['status'] }}</span>{% endif %}</td>
                         <td>{{ project['last_checked'] }}</td>
                         <td>{{ project['status_message'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="table table-bordered">
+            <h4 class="mt-4 table-dark-yellow">API CheckList UI Health Checker</h4>
+            <thead class="table-dark">
+                <tr>
+                    <th>Project Name</th>
+                    <th>URL</th>
+                    <th>Status</th>
+                    <th>Last Checked</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for projectapi in projectApi %}
+                    <tr>
+                        <td>{{ projectapi['project_name'] }}</td>
+                        <td>{{ projectapi['url'] | url_without_query }}</td>
+                        <td>{% if projectapi['status'] == 200 %}<span style="color: green;">{{ projectapi['status'] }}</span>{% else %}<span style="color: red;">{{ projectapi['status'] }}</span>{% endif %}</td>
+                        <td>{{ projectapi['last_checked'] }}</td>
+                        <td>{{ projectapi['status_message'] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

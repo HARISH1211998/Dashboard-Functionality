@@ -1,0 +1,7 @@
+Project Name,URL,Status,Last Checked,api_key
+Expand Network,https://api.expand.network/chain/getbalance/?address=0x731FDBd6871aD5cD905eE560A84615229eD8197a,,,4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0
+Expand Network,"https://api.expand.network/dex/getprice?dexId=1000&path=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2,0xdac17f958d2ee523a2206206994597c13d831ec7&amountIn=10000000000000000000",,,4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0
+Expand Network,https://api.expand.network/dex/getuserliquidity?tokenA=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&tokenB=0x6b175474e89094c44da98b954eedeac495271d0f&address=0x6fb447ae94f5180254d436a693907a1f57696900&dexId=1000,,,4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0
+Expand Network,https://api.expand.network/dex/getpoolliquidity?dexId=1300&poolAddress=0xC12aF0C4AA39D3061c56cD3CB19f5e62dEeaeBdE,,,4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0
+Expand Network,"https://api.expand.network/dex/getprice?dexId=1100&path=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2,0xdac17f958d2ee523a2206206994597c13d831ec7&amountIn=10000000000000000000",,,4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0
+Expand Network,https://api.expand.network/lendborrow/getpool?lendborrowId=1000&asset=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,,,4TxuJj4YvI3D3lIoTpWCF152D1r61IG78TLVPNB0
