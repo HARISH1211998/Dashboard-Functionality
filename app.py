@@ -65,7 +65,6 @@ def index():
             url = row['URL']
             api_key = row['api_key']
             is_successful, response_data, status_code = check_authenticated_url(url, api_key)
-
             if is_successful:
                 status = status_code
             else:
@@ -90,4 +89,4 @@ def url_without_query(url):
     return clean_url
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000)
