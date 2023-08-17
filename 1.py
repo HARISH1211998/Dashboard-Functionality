@@ -22,10 +22,7 @@ parent_path = os.path.dirname(script_path)
 log_path = os.path.join(parent_path, "logs", "sync-nft-data")
 
 def downloadMetamaskExtension():    
-    ssl._create_default_https_context = ssl._create_unverified_context
-
-    url = 'https://xord-testing.s3.amazonaws.com/selenium/10.0.2_0.crx'
-    urllib.request.urlretrieve(url, os.getcwd() + '/metamaskExtension.crx')
+    print("Empty")
 
 def launchSeleniumWebdriver():
     print('path', EXTENSION_PATH)
@@ -119,7 +116,7 @@ def connectToWebsite(driver, url):
         sleep(5)
 
         # Connect to Metamask
-        connect_metamask_button = driver.find_element(By.XPATH, '//*[@id="__next"]/div/nav/div/div[2]/button')
+        connect_metamask_button = driver.find_element(By.XPATH, '//*[@id="navbarSupportedContent"]/div/ul/li/button')
         driver.execute_script("arguments[0].click();", connect_metamask_button)
         sleep(1)
         print("Metamask connection initiated")
@@ -171,7 +168,7 @@ def main():
         metamaskSetup(driver, recoveryPhrase, metamask_password)
         sleep(2)
 
-        url = "https://app.expand.network/"
+        url = "https://fxdex.tngbl.xyz/"
         message = connectToWebsite(driver, url)
         print(message)
 

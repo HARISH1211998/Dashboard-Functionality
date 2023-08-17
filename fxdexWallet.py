@@ -21,6 +21,10 @@ script_path = os.path.realpath(os.path.dirname(__file__))
 parent_path = os.path.dirname(script_path)
 log_path = os.path.join(parent_path, "logs", "sync-nft-data")
 
+
+StatusWallet = []
+
+
 def downloadMetamaskExtension():    
     ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -111,7 +115,7 @@ def metamaskSetup(driver, recoveryPhrase, password):
     except Exception as e:
        print(f"An error occurred: {str(e)}")
 
-def connectToWebsite(driver, url):
+def connectToWebsite(driver, url, path):
     try:
         print(url)
         # To open the website
@@ -119,13 +123,8 @@ def connectToWebsite(driver, url):
         sleep(5)
 
         # Connect to Metamask
-        connect_metamask_button = driver.find_element(By.XPATH, '//*[@id="__next"]/div/nav/div/div[2]/button')
+        connect_metamask_button = driver.find_element(By.XPATH, path)
         driver.execute_script("arguments[0].click();", connect_metamask_button)
-        sleep(1)
-        print("Metamask connection initiated")
-
-        connect_metamask_button1 = driver.find_element(By.XPATH, '/html/body/div[4]/div[2]/div/div/div[3]/div/div[1]')
-        driver.execute_script("arguments[0].click();", connect_metamask_button1)
         sleep(1)
         print("Metamask connection initiated")
 
@@ -162,7 +161,7 @@ def connectToWebsite(driver, url):
         
     return url, status, message
 
-def main():
+def WalletConnection():
     try:       
         downloadMetamaskExtension()
         driver = launchSeleniumWebdriver()
@@ -170,14 +169,29 @@ def main():
         # To import wallet
         metamaskSetup(driver, recoveryPhrase, metamask_password)
         sleep(2)
-
-        url = "https://app.expand.network/"
-        message = connectToWebsite(driver, url)
-        print(message)
-
+        urls = [
+            "https://digitali.xyz/",
+            "https://fxdex.tngbl.xyz/",
+        ]
+        paths = [
+            '//*[@id="navbarSupportedContent"]/div/ul/li/button',
+            '//*[@id="root"]/main/div/div[1]/div[2]/button/span'
+        ]
+        ProjectName = [
+            "Digitali",
+            "Fxdex",
+        ]
+        for url, path, ProjectName in zip(urls, paths, ProjectName):
+            url, status, message = connectToWebsite(driver, url, path)
+            api_result = {
+                'url': url,
+                'status': status,
+                'last_checked': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'status_message': message,
+            }
+            StatusWallet.append(api_result)
     except Exception as e:
         print("An error occurred:", str(e))
+    return StatusWallet
 
-
-if __name__ == '__main__':  
-       main()
+WalletConnection()
