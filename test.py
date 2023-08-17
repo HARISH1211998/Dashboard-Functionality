@@ -112,40 +112,55 @@ def metamaskSetup(driver, recoveryPhrase, password):
        print(f"An error occurred: {str(e)}")
 
 def connectToWebsite(driver, url):
-     print(url)
-     # To open the website
-     driver.get(url)    
-     sleep(5)   
+    try:
+        print(url)
+        # To open the website
+        driver.get(url)
+        sleep(5)
 
-     # connect metamask 
-     connect_metamask_button = driver.find_element(By.XPATH, '//*[@id="navbarSupportedContent"]/div/ul/li/button')
-     driver.execute_script("arguments[0].click();", connect_metamask_button)  
-     sleep(1)
-     print("Metamask connected is successfully")
+        # Connect to Metamask
+        connect_metamask_button = driver.find_element(By.XPATH, '//*[@id="__next"]/div/nav/div/div[2]/button')
+        driver.execute_script("arguments[0].click();", connect_metamask_button)
+        sleep(1)
+        print("Metamask connection initiated")
 
-    #  driver.execute_script("window.open('');")
-     driver.switch_to.window(driver.window_handles[1])
+        connect_metamask_button1 = driver.find_element(By.XPATH, '/html/body/div[4]/div[2]/div/div/div[3]/div/div[1]')
+        driver.execute_script("arguments[0].click();", connect_metamask_button1)
+        sleep(1)
+        print("Metamask connection initiated")
 
-     driver.get('chrome-extension://{}/popup.html'.format(EXTENSION_ID))
-     sleep(5)
-     driver.execute_script("window.scrollBy(0, document.body.scrollHeight)")
-     sleep(3)
+        driver.switch_to.window(driver.window_handles[1])
 
-     next_button = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[3]/div/div[2]/div[4]/div[2]/button[2]')
-     driver.execute_script("arguments[0].click();", next_button)  
-     sleep(2)
-     connect_button = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[3]/div/div[2]/div[2]/div[2]/footer/button[2]')
-     driver.execute_script("arguments[0].click();", connect_button)  
-     sleep(2)
-     print('Site connected to metamask')
-     print(driver.window_handles)
-     print("closing popup")           
-     # closing the message popup after all done metamask screen
-     close_popup = driver.find_element(By.XPATH, '//*[@id="popover-content"]/div/div/section/header/div/button')
-     driver.execute_script("arguments[0].click();", close_popup) 
-     sleep(2)   
-     driver.switch_to.window(driver.window_handles[0])
-     sleep(2)
+        driver.get('chrome-extension://{}/popup.html'.format(EXTENSION_ID))
+        sleep(5)
+        driver.execute_script("window.scrollBy(0, document.body.scrollHeight)")
+        sleep(3)
+
+        next_button = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[3]/div/div[2]/div[4]/div[2]/button[2]')
+        driver.execute_script("arguments[0].click();", next_button)
+        sleep(2)
+        connect_button = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[3]/div/div[2]/div[2]/div[2]/footer/button[2]')
+        driver.execute_script("arguments[0].click();", connect_button)
+        sleep(2)
+        
+        # Successful connection
+        status = 200
+        message = "Metamask connection is successful"
+        print('Site connected to Metamask')
+        
+    except Exception as e:
+        status = 500
+        message = f"Metamask connection failed: {str(e)}"
+        print('Metamask connection failed:', str(e))
+    
+    finally:
+        close_popup = driver.find_element(By.XPATH, '//*[@id="popover-content"]/div/div/section/header/div/button')
+        driver.execute_script("arguments[0].click();", close_popup)
+        sleep(2)
+        driver.switch_to.window(driver.window_handles[0])
+        sleep(2)
+        
+    return url, status, message
 
 def main():
     try:       
@@ -156,8 +171,10 @@ def main():
         metamaskSetup(driver, recoveryPhrase, metamask_password)
         sleep(2)
 
-        url = "https://digitali.xyz/"
-        connectToWebsite(driver, url)
+        url = "https://app.expand.network/"
+        message = connectToWebsite(driver, url)
+        print(message)
+
     except Exception as e:
         print("An error occurred:", str(e))
 

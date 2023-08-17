@@ -53,7 +53,7 @@
         </table>
 
         <table class="table table-bordered">
-            <h4 class="mt-4 table-dark-yellow">API CheckList UI Health Checker</h4>
+            <h4 class="mt-4 table-dark-yellow">API CheckList Health Checker</h4>
             <thead class="table-dark">
                 <tr>
                     <th>Project Name</th>
@@ -71,6 +71,28 @@
                         <td>{% if projectapi['status'] == 200 %}<span style="color: green;">{{ projectapi['status'] }}</span>{% else %}<span style="color: red;">{{ projectapi['status'] }}</span>{% endif %}</td>
                         <td>{{ projectapi['last_checked'] }}</td>
                         <td>{{ projectapi['status_message'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="table table-bordered">
+            <h4 class="mt-4 table-dark-yellow">Wallet Connection Health Checker</h4>
+            <thead class="table-dark">
+                <tr>
+                    <th>URL</th>
+                    <th>Status</th>
+                    <th>Last Checked</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for StatusWallet in StatusWallets %}
+                    <tr>
+                        <td>{{ StatusWallet['url'] | url_without_query }}</td>
+                        <td>{% if StatusWallet['status'] == 200 %}<span style="color: green;">{{ StatusWallet['status'] }}</span>{% else %}<span style="color: red;">{{ StatusWallet['status'] }}</span>{% endif %}</td>
+                        <td>{{ StatusWallet['last_checked'] }}</td>
+                        <td>{{ StatusWallet['status_message'] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -1,15 +1,19 @@
 import os
+import logging
 import csv
 import datetime
 import requests
 from flask import Flask, render_template
 from urllib.parse import urlparse, urlunparse 
+from fxdexWallet import WalletConnection
 
 app = Flask(__name__)
 
 PROJECTS = []  # Store project data
 
 PROJECTSAPI=[] 
+
+STATUSWALLET=[]
 
 def check_authenticated_url(url, api_key):
     headers = {
@@ -80,7 +84,7 @@ def index():
             }
             PROJECTSAPI.append(api_result)
 
-    return render_template('index.html', projects=PROJECTS, projectApi=PROJECTSAPI)
+    return render_template('index.html', projects=PROJECTS, projectApi=PROJECTSAPI, StatusWallets=STATUSWALLET)
 
 @app.template_filter('url_without_query')
 def url_without_query(url):
