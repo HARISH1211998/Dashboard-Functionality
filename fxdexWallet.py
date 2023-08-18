@@ -161,6 +161,17 @@ def connectToWebsite(driver, url, path):
         
     return url, status, message
 
+csv_filename = 'statuswallet.csv'
+
+def append_to_csv(data, filename):
+    file_exists = os.path.exists(filename)
+
+    with open(filename, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['Project Name', 'URL', 'Status', 'Last Checked', 'Status Message'])
+        writer.writerow(data.values())  #
+
 def WalletConnection():
     try:       
         downloadMetamaskExtension()
@@ -171,7 +182,7 @@ def WalletConnection():
         sleep(2)
         urls = [
             "https://digitali.xyz/",
-            "https://fxdex.tngbl.xyz/",
+            "https://app.fx-dex.com/",
         ]
         paths = [
             '//*[@id="navbarSupportedContent"]/div/ul/li/button',
@@ -184,12 +195,15 @@ def WalletConnection():
         for url, path, ProjectName in zip(urls, paths, ProjectName):
             url, status, message = connectToWebsite(driver, url, path)
             api_result = {
+                'project_name': ProjectName,
                 'url': url,
                 'status': status,
                 'last_checked': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 'status_message': message,
             }
-            StatusWallet.append(api_result)
+            for api_result in StatusWallet:
+                append_to_csv(api_result, csv_filename)
+        driver.quit()
     except Exception as e:
         print("An error occurred:", str(e))
     return StatusWallet

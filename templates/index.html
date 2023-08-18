@@ -80,6 +80,7 @@
             <h4 class="mt-4 table-dark-yellow">Wallet Connection Health Checker</h4>
             <thead class="table-dark">
                 <tr>
+                    <th>Project Name</th>
                     <th>URL</th>
                     <th>Status</th>
                     <th>Last Checked</th>
@@ -89,6 +90,7 @@
             <tbody>
                 {% for StatusWallet in StatusWallets %}
                     <tr>
+                        <td>{{ StatusWallet['project_name'] }}</td>
                         <td>{{ StatusWallet['url'] | url_without_query }}</td>
                         <td>{% if StatusWallet['status'] == 200 %}<span style="color: green;">{{ StatusWallet['status'] }}</span>{% else %}<span style="color: red;">{{ StatusWallet['status'] }}</span>{% endif %}</td>
                         <td>{{ StatusWallet['last_checked'] }}</td>

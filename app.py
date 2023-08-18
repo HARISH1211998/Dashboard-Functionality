@@ -1,10 +1,10 @@
 import os
-import logging
 import csv
 import datetime
 import requests
 from flask import Flask, render_template
 from urllib.parse import urlparse, urlunparse 
+from apscheduler.schedulers.background import BackgroundScheduler
 from fxdexWallet import WalletConnection
 
 app = Flask(__name__)
@@ -83,8 +83,29 @@ def index():
                 'apikey': api_key,
             }
             PROJECTSAPI.append(api_result)
+            
+    STATUSWALLET.clear()
+    with open('statuswallet.csv', 'r') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            url = row['URL']
+            api_key = row['api_key']
+            is_successful, response_data, status_code = check_authenticated_url(url, api_key)
+            if is_successful:
+                status = status_code
+            else:
+                status = status_code if status_code is not None else 'Failed'
 
+            wallet_result = {
+                'project_name': 'Expand Network',
+                'url': url,
+                'status': status,
+                'last_checked': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'status_message': response_data.get('message', 'success'),
+            }
+            STATUSWALLET.append(wallet_result)
     return render_template('index.html', projects=PROJECTS, projectApi=PROJECTSAPI, StatusWallets=STATUSWALLET)
+
 
 @app.template_filter('url_without_query')
 def url_without_query(url):
@@ -93,4 +114,5 @@ def url_without_query(url):
     return clean_url
 
 if __name__ == '__main__':
+    scheduler.start()  # Start the scheduler
     app.run(host='0.0.0.0', port=8000)
