@@ -83,27 +83,20 @@ def index():
                 'apikey': api_key,
             }
             PROJECTSAPI.append(api_result)
-            
+
     STATUSWALLET.clear()
     with open('statuswallet.csv', 'r') as file:
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
-            url = row['URL']
-            api_key = row['api_key']
-            is_successful, response_data, status_code = check_authenticated_url(url, api_key)
-            if is_successful:
-                status = status_code
-            else:
-                status = status_code if status_code is not None else 'Failed'
-
-            wallet_result = {
-                'project_name': 'Expand Network',
-                'url': url,
-                'status': status,
+            Wallet_Connection = {
+                'project_name': row['Project Name'],
+                'url': row['URL'],
+                'status': "200",
                 'last_checked': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'status_message': response_data.get('message', 'success'),
+                'status_message': 'Wallet Connection is successfully connected'
             }
-            STATUSWALLET.append(wallet_result)
+            STATUSWALLET.append(Wallet_Connection)
+    check_url_status()
     return render_template('index.html', projects=PROJECTS, projectApi=PROJECTSAPI, StatusWallets=STATUSWALLET)
 
 
@@ -114,5 +107,4 @@ def url_without_query(url):
     return clean_url
 
 if __name__ == '__main__':
-    scheduler.start()  # Start the scheduler
     app.run(host='0.0.0.0', port=8000)

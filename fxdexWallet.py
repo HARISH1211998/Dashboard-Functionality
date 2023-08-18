@@ -207,5 +207,3 @@ def WalletConnection():
     except Exception as e:
         print("An error occurred:", str(e))
     return StatusWallet
-
-WalletConnection()
